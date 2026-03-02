@@ -1,0 +1,33 @@
+node_modules/
+dist/
+*.js.map
+*.d.ts.map
+
+# Runtime data
+data/*.db
+data/*.db-shm
+data/*.db-wal
+
+# Environment
+.env
+
+# Logs
+*.log
+logs/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Temporary Claude files
+*tmpclaude*
+
+# Build artifacts
+packages/*/dist/
+packages/web/dist/

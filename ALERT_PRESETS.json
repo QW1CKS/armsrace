@@ -1,0 +1,125 @@
+{
+  "_comment": "Armsrace Monitor — Alert Preset Definitions. Describes each alert type, its detection logic, severity mapping, cooldown, and entity fields.",
+  "version": "1.0.0",
+  "alert_types": [
+    {
+      "type": "geopolitical_escalation",
+      "display_name": "Geopolitical Escalation",
+      "description": "Fires when a country's aggregate conflict/advisory signal severity rises ≥20 points comparing the last 24h window against the prior 24h window.",
+      "icon": "🌐",
+      "color": "#FF5D5D",
+      "severity_range": [40, 100],
+      "cooldown_hours": 4,
+      "min_signals": 3,
+      "trigger_logic": {
+        "categories": ["conflict", "advisory", "geopolitical"],
+        "window_current_hours": 24,
+        "window_prior_hours": 24,
+        "min_severity_delta": 20,
+        "group_by": "country_code"
+      },
+      "entity_type": "country",
+      "confidence_formula": "min(0.90, 0.55 + delta/100)"
+    },
+    {
+      "type": "military_posture",
+      "display_name": "Military Posture Alert",
+      "description": "Fires when ≥5 military/aviation/maritime signals with severity ≥50 appear within a 2-hour window, suggesting unusual force posture or mobilisation activity.",
+      "icon": "⚔️",
+      "color": "#FF5D5D",
+      "severity_range": [50, 100],
+      "cooldown_hours": 3,
+      "min_signals": 5,
+      "trigger_logic": {
+        "categories": ["military", "aviation", "maritime"],
+        "window_hours": 2,
+        "min_severity": 50,
+        "group_by": "country_code"
+      },
+      "entity_type": "country",
+      "confidence_formula": "min(0.88, 0.50 + (count - 5) * 0.05)"
+    },
+    {
+      "type": "market_shock",
+      "display_name": "Market Shock",
+      "description": "Fires when a tracked asset moves ≥5% in a single snapshot (price shock) OR when the composite Market Stress Index crosses 75/100.",
+      "icon": "📉",
+      "color": "#F5B84B",
+      "severity_range": [50, 100],
+      "cooldown_hours": 2,
+      "trigger_logic": {
+        "asset_shock_threshold_pct": 5,
+        "stress_index_threshold": 75,
+        "stress_index_name": "market_stress"
+      },
+      "entity_type": "asset",
+      "confidence": 0.80
+    },
+    {
+      "type": "cyber_spike",
+      "display_name": "Cyber Threat Spike",
+      "description": "Fires when the cyber signal count in the last hour exceeds 2× the 7-day rolling hourly baseline, with a minimum of 10 signals in the current window.",
+      "icon": "💻",
+      "color": "#CBA6F7",
+      "severity_range": [40, 100],
+      "cooldown_hours": 1,
+      "min_signals": 10,
+      "trigger_logic": {
+        "categories": ["cyber"],
+        "window_hours": 1,
+        "baseline_days": 7,
+        "spike_multiplier": 2.0
+      },
+      "entity_type": null,
+      "confidence_formula": "min(0.92, 0.65 + (ratio - 2.0) * 0.1)"
+    },
+    {
+      "type": "infra_disruption",
+      "display_name": "Infrastructure Disruption",
+      "description": "Fires when ≥3 infrastructure/maritime/aviation signals with severity ≥60 are detected within 1 hour, indicating a significant outage, blockage, or systemic disruption.",
+      "icon": "🔌",
+      "color": "#F5B84B",
+      "severity_range": [60, 100],
+      "cooldown_hours": 2,
+      "min_signals": 3,
+      "trigger_logic": {
+        "categories": ["infrastructure", "maritime", "aviation"],
+        "window_hours": 1,
+        "min_severity": 60,
+        "group_by": "country_code"
+      },
+      "entity_type": "country",
+      "confidence_formula": "min(0.88, 0.55 + (count - 3) * 0.08)"
+    },
+    {
+      "type": "convergence",
+      "display_name": "Multi-Signal Convergence",
+      "description": "Fires when ≥3 distinct signal categories are simultaneously elevated (severity ≥40) for the same country within a 2-hour window. Indicates high-dimensional crisis potential.",
+      "icon": "⚡",
+      "color": "#FF5D5D",
+      "severity_range": [40, 100],
+      "cooldown_hours": 2,
+      "min_categories": 3,
+      "trigger_logic": {
+        "window_hours": 2,
+        "min_severity": 40,
+        "min_distinct_categories": 3,
+        "group_by": "country_code"
+      },
+      "entity_type": "country",
+      "confidence_formula": "min(0.95, 0.60 + (cat_count - 3) * 0.10)"
+    }
+  ],
+  "severity_thresholds": {
+    "critical": 67,
+    "elevated": 34,
+    "low": 0
+  },
+  "global_settings": {
+    "analytics_run_interval_ms": 60000,
+    "forecast_run_interval_ms": 1800000,
+    "sse_poll_interval_ms": 5000,
+    "max_alerts_per_page": 20,
+    "alert_retention_days": 30
+  }
+}

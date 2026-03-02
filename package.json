@@ -1,0 +1,23 @@
+{
+  "name": "armsrace",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "npm run build:shared && concurrently -n \"API,WORKER,WEB\" -c \"yellow,green,cyan\" --kill-others-on-fail \"npm run dev -w packages/api\" \"npm run dev -w packages/worker\" \"npm run dev -w packages/web\"",
+    "start": "npm run build:shared && concurrently -n \"API,WORKER,WEB\" -c \"yellow,green,cyan\" --kill-others-on-fail \"npm run start -w packages/api\" \"npm run start -w packages/worker\" \"npm run start -w packages/web\"",
+    "build": "npm run build --workspaces --if-present",
+    "build:shared": "npm run build -w packages/shared",
+    "typecheck": "tsc --noEmit -p packages/shared/tsconfig.json && tsc --noEmit -p packages/api/tsconfig.json && tsc --noEmit -p packages/worker/tsconfig.json && tsc --noEmit -p packages/web/tsconfig.json",
+    "install:all": "npm install"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "typescript": "^5.4.5"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  }
+}
