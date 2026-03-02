@@ -214,6 +214,7 @@ export default function Settings() {
                 ['movers', 'Market Movers'],
                 ['ticker', 'Alert Ticker'],
                 ['alerts', 'Alert Feed'],
+                ['liveFeed', 'Live Feed'],
               ] as [keyof WidgetVisibility, string][]).map(([key, label]) => (
                 <label key={key} style={{ display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer', fontSize: '12px', color: 'var(--text-secondary)' }}>
                   <input type="checkbox" checked={settings.widgets[key]} onChange={() => toggleWidget(key)} style={{ accentColor: 'var(--color-info)' }} />

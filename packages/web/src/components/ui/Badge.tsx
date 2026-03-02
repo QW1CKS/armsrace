@@ -12,8 +12,8 @@ interface BadgeProps {
 export function Badge({ severity, label, color, size = 'md', style }: BadgeProps) {
   const c = color ?? (severity != null ? severityColor(severity) : 'var(--text-secondary)');
   const text = label ?? (severity != null ? `${severity}` : '');
-  const fontSize = size === 'sm' ? '9px' : '10px';
-  const padding = size === 'sm' ? '1px 6px' : '2px 8px';
+  const fontSize = size === 'sm' ? '11px' : '12px';
+  const padding = size === 'sm' ? '2px 8px' : '3px 10px';
 
   return (
     <span style={{

@@ -32,7 +32,7 @@ export function ConfidenceBar({ value, showLabel = true, height = 4 }: Confidenc
       {showLabel && (
         <span style={{
           fontFamily: 'var(--font-mono)',
-          fontSize: '10px',
+          fontSize: '12px',
           color: 'var(--text-muted)',
           minWidth: '28px',
         }}>

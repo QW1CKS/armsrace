@@ -21,6 +21,41 @@ const SYMBOLS = [
   { symbol: 'ETH-USD', name: 'Ethereum', assetClass: 'crypto' },
 ];
 
+/* ── Yahoo Finance crumb authentication ──────────────────────── */
+let cachedCrumb: string | null = null;
+let cachedCookies: string | null = null;
+let crumbExpiry = 0;
+const CRUMB_TTL = 30 * 60_000; // 30 min
+
+const YF_UA =
+  'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36';
+
+async function getYahooCrumb(): Promise<{ crumb: string; cookies: string }> {
+  if (cachedCrumb && cachedCookies && Date.now() < crumbExpiry) {
+    return { crumb: cachedCrumb, cookies: cachedCookies };
+  }
+
+  // Step 1: Hit Yahoo to collect cookies
+  const consentRes = await got('https://fc.yahoo.com/', {
+    headers: { 'User-Agent': YF_UA },
+    followRedirect: true,
+    throwHttpErrors: false,
+  });
+  const rawCookies = consentRes.headers['set-cookie'] ?? [];
+  const cookieStr = rawCookies.map((c) => c.split(';')[0]).join('; ');
+
+  // Step 2: Fetch crumb using those cookies
+  const crumb = await got('https://query2.finance.yahoo.com/v1/test/getcrumb', {
+    headers: { 'User-Agent': YF_UA, Cookie: cookieStr },
+  }).text();
+
+  cachedCrumb = crumb;
+  cachedCookies = cookieStr;
+  crumbExpiry = Date.now() + CRUMB_TTL;
+
+  return { crumb, cookies: cookieStr };
+}
+
 export class YahooFinanceConnector extends BaseConnector {
   readonly config: ConnectorConfig = {
     id: 'yahoo_finance',
@@ -31,18 +66,27 @@ export class YahooFinanceConnector extends BaseConnector {
     rateLimitMs: 500,
     requiresApiKey: false,
     enabled: true,
-    baseUrl: 'https://query1.finance.yahoo.com/v8/finance/spark',
+    baseUrl: 'https://query2.finance.yahoo.com/v7/finance/quote',
     attribution: 'Yahoo Finance (unofficial public endpoint)',
     termsUrl: 'https://legal.yahoo.com/us/en/yahoo/terms/product-atos/finance/index.html',
   };
 
   protected async doFetch(): Promise<Signal[]> {
     const symbolStr = SYMBOLS.map((s) => s.symbol).join(',');
-    const data = await got('https://query1.finance.yahoo.com/v7/finance/quote', {
-      searchParams: { symbols: symbolStr, fields: 'regularMarketPrice,regularMarketChange,regularMarketChangePercent,regularMarketVolume,shortName' },
+
+    // Get authenticated crumb + cookies
+    const { crumb, cookies } = await getYahooCrumb();
+
+    const data = await got('https://query2.finance.yahoo.com/v7/finance/quote', {
+      searchParams: {
+        symbols: symbolStr,
+        crumb,
+        fields: 'regularMarketPrice,regularMarketChange,regularMarketChangePercent,regularMarketVolume,shortName',
+      },
       headers: {
-        'User-Agent': 'Mozilla/5.0',
+        'User-Agent': YF_UA,
         Accept: 'application/json',
+        Cookie: cookies,
       },
     }).json<{ quoteResponse?: { result?: Array<Record<string, unknown>> } }>();
 

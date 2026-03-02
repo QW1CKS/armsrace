@@ -11,7 +11,7 @@ export class HapiConnector extends BaseConnector {
     intervalMs: 12 * 60 * 60_000,
     rateLimitMs: 2000,
     requiresApiKey: false,
-    enabled: true,
+    enabled: false, // HAPI API requires registered app_identifier
     baseUrl: 'https://hapi.humdata.org/api/v1',
     attribution: 'UN OCHA Humanitarian API (HAPI)',
     termsUrl: 'https://hapi.humdata.org/docs#terms',

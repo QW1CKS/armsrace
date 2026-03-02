@@ -12,7 +12,7 @@ export class OrefConnector extends BaseConnector {
     intervalMs: 2 * 60_000, // every 2 minutes
     rateLimitMs: 1000,
     requiresApiKey: false,
-    enabled: true,
+    enabled: false, // OREF API is geo-restricted to Israel
     baseUrl: 'https://www.oref.org.il/WarningMessages/alert/alerts.json',
     attribution: 'OREF (Israel Home Front Command)',
     termsUrl: 'https://www.oref.org.il/',

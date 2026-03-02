@@ -7,9 +7,9 @@ const router = Router();
 const signalsQuerySchema = z.object({
   category: z.string().optional(),
   severity_min: z.coerce.number().min(0).max(100).optional(),
-  limit: z.coerce.number().min(1).max(200).default(50),
+  limit: z.coerce.number().min(1).max(500).default(50),
   offset: z.coerce.number().min(0).default(0),
-  window: z.enum(['1h', '6h', '24h', '7d']).default('24h'),
+  window: z.enum(['1h', '6h', '24h', '3d', '7d', '30d', 'all']).default('24h'),
   country_code: z.string().max(2).optional(),
 });
 
@@ -17,7 +17,10 @@ const WINDOW_MS: Record<string, number> = {
   '1h': 60 * 60_000,
   '6h': 6 * 60 * 60_000,
   '24h': 24 * 60 * 60_000,
+  '3d': 3 * 24 * 60 * 60_000,
   '7d': 7 * 24 * 60 * 60_000,
+  '30d': 30 * 24 * 60 * 60_000,
+  'all': 0,
 };
 
 router.get('/', (req, res, next) => {
@@ -25,9 +28,13 @@ router.get('/', (req, res, next) => {
     const params = signalsQuerySchema.parse(req.query);
     const db = getDb();
 
-    const since = Date.now() - (WINDOW_MS[params.window] ?? WINDOW_MS['24h']);
+    const windowMs = WINDOW_MS[params.window] ?? WINDOW_MS['24h'];
+    const since = windowMs > 0 ? Date.now() - windowMs : 0;
 
-    const conditions: string[] = ['published_at > @since', 'is_stale = 0'];
+    const conditions: string[] = ['is_stale = 0'];
+    if (since > 0) {
+      conditions.push('published_at > @since');
+    }
     const bindParams: Record<string, unknown> = { since, limit: params.limit, offset: params.offset };
 
     if (params.category) {

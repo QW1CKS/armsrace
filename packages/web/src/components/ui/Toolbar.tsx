@@ -33,6 +33,7 @@ const WIDGET_LABELS: Record<keyof WidgetVisibility, string> = {
   movers: 'Market Movers',
   ticker: 'Alert Ticker',
   alerts: 'Alert Feed',
+  liveFeed: 'Live Feed',
 };
 
 type Panel = 'map' | 'time' | 'display' | 'widgets' | null;

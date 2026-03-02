@@ -48,7 +48,7 @@ export class GpsjamConnector extends BaseConnector {
       if (!lat || !lon) continue;
 
       signals.push({
-        id: `gpsjam_${lat.toFixed(1)}_${lon.toFixed(1)}_${yesterday}`,
+        id: `gpsjam_${lat.toFixed(1)}_${lon.toFixed(1)}_${usedDate}`,
         sourceId: this.config.id,
         category: this.config.category,
         subcategory: 'gps_jamming',
@@ -58,7 +58,7 @@ export class GpsjamConnector extends BaseConnector {
         confidence: 0.7,
         lat,
         lon,
-        publishedAt: new Date(yesterday),
+        publishedAt: new Date(usedDate || new Date().toISOString()),
       });
     }
 

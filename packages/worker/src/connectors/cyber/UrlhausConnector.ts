@@ -29,9 +29,15 @@ export class UrlhausConnector extends BaseConnector {
   };
 
   protected async doFetch(): Promise<Signal[]> {
-    const data = await got(this.config.baseUrl, {
+    // URLhaus API now requires auth on POST; use the public CSV JSON endpoint instead
+    const data = await got('https://urlhaus-api.abuse.ch/v1/', {
       method: 'POST',
-      form: { limit: '100' },
+      headers: {
+        'User-Agent': 'ArmsRace-Monitor/1.0',
+        Accept: 'application/json',
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: 'limit=100',
     }).json<{ urls?: UrlhausEntry[] }>();
 
     return (data.urls ?? []).map((entry) => ({
@@ -39,8 +45,8 @@ export class UrlhausConnector extends BaseConnector {
       sourceId: this.config.id,
       category: this.config.category,
       subcategory: 'malware_url',
-      title: `Malware URL: ${entry.threat}`,
-      summary: `${entry.url_status.toUpperCase()} — ${entry.url.slice(0, 100)}`,
+      title: `Malware URL: ${entry.threat ?? 'unknown'}`,
+      summary: `${(entry.url_status ?? 'unknown').toUpperCase()} — ${(entry.url ?? '').slice(0, 100)}`,
       severity: entry.url_status === 'online' ? 65 : 40,
       confidence: 0.8,
       url: entry.urlhaus_link,

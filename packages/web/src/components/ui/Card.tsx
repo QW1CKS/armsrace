@@ -43,7 +43,7 @@ export function Card({ children, title, headerRight, style, className, glow = 'n
         }}>
           <span style={{
             fontFamily: 'var(--font-sans)',
-            fontSize: '12px',
+            fontSize: '14px',
             fontWeight: 600,
             color: 'var(--text-primary)',
             letterSpacing: '0.02em',

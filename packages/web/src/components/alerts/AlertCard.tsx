@@ -45,10 +45,10 @@ export function AlertCard({ alert, onAcknowledge, onDismiss, compact = false }: 
         <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap', flex: 1 }}>
           <Badge severity={alert.severity} label={String(alert.type ?? '').replace(/_/g, ' ')} />
           {isAcknowledged && (
-            <span style={{ fontSize: '10px', color: 'var(--color-success)' }}>✓ Ack</span>
+            <span style={{ fontSize: '12px', color: 'var(--color-success)' }}>✓ Ack</span>
           )}
         </div>
-        <span style={{ fontFamily: 'var(--font-mono)', fontSize: '9px', color: 'var(--text-muted)', whiteSpace: 'nowrap', letterSpacing: '0.05em' }}>
+        <span style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', color: 'var(--text-muted)', whiteSpace: 'nowrap', letterSpacing: '0.05em' }}>
           {triggeredAt}
         </span>
       </div>
@@ -75,12 +75,12 @@ export function AlertCard({ alert, onAcknowledge, onDismiss, compact = false }: 
                   key={i}
                   style={{
                     fontFamily: 'var(--font-mono)',
-                    fontSize: '9px',
+                    fontSize: '11px',
                     color: 'var(--text-muted)',
                     background: 'var(--bg-raised)',
                     border: '1px solid var(--border-subtle)',
                     borderRadius: '4px',
-                    padding: '1px 6px',
+                    padding: '2px 8px',
                   }}
                 >
                   {entity.name ?? String(entity)}
@@ -91,7 +91,7 @@ export function AlertCard({ alert, onAcknowledge, onDismiss, compact = false }: 
 
           {/* Confidence */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <span style={{ fontFamily: 'var(--font-mono)', fontSize: '9px', color: 'var(--text-muted)', minWidth: '64px' }}>Conf</span>
+            <span style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--text-muted)', minWidth: '64px' }}>Conf</span>
             <div style={{ flex: 1 }}>
               <ConfidenceBar value={Number(alert.confidence ?? 0.5)} height={2} />
             </div>
@@ -99,7 +99,7 @@ export function AlertCard({ alert, onAcknowledge, onDismiss, compact = false }: 
 
           {/* Source count */}
           {(sources.length > 0 || signalIds.length > 0) && (
-            <div style={{ fontFamily: 'var(--font-mono)', fontSize: '9px', color: 'var(--text-muted)' }}>
+            <div style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--text-muted)' }}>
               {sources.length} src · {signalIds.length} sig
             </div>
           )}
@@ -113,9 +113,9 @@ export function AlertCard({ alert, onAcknowledge, onDismiss, compact = false }: 
             <button
               onClick={() => onAcknowledge(alert.id)}
               style={{
-                padding: '3px 10px',
+                padding: '4px 12px',
                 fontFamily: 'var(--font-mono)',
-                fontSize: '9px',
+                fontSize: '11px',
                 background: `${color}15`,
                 border: `1px solid ${color}55`,
                 borderRadius: '6px',
@@ -131,9 +131,9 @@ export function AlertCard({ alert, onAcknowledge, onDismiss, compact = false }: 
             <button
               onClick={() => onDismiss(alert.id)}
               style={{
-                padding: '3px 10px',
+                padding: '4px 12px',
                 fontFamily: 'var(--font-mono)',
-                fontSize: '9px',
+                fontSize: '11px',
                 background: 'transparent',
                 border: '1px solid var(--border-subtle)',
                 borderRadius: '6px',

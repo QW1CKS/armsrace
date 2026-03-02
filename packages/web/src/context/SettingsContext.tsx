@@ -32,6 +32,7 @@ export interface WidgetVisibility {
   movers: boolean;
   ticker: boolean;
   alerts: boolean;
+  liveFeed: boolean;
 }
 
 interface Settings {
@@ -65,6 +66,7 @@ const DEFAULT_WIDGETS: WidgetVisibility = {
   movers: true,
   ticker: true,
   alerts: true,
+  liveFeed: true,
 };
 
 const DEFAULT_SETTINGS: Settings = {

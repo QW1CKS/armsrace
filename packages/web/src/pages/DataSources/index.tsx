@@ -177,13 +177,13 @@ export default function DataSources() {
                         </span>
                       </span>
                     </td>
-                    <td style={{ padding: '8px 12px', color: 'var(--text-muted)', fontSize: '10px' }}>
+                    <td style={{ padding: '8px 12px', color: 'var(--text-muted)', fontSize: '13px' }}>
                       {timeAgo(source.last_fetch_at)}
                     </td>
-                    <td style={{ padding: '8px 12px', color: 'var(--text-secondary)', fontSize: '10px', textAlign: 'right' }}>
+                    <td style={{ padding: '8px 12px', color: 'var(--text-secondary)', fontSize: '13px', textAlign: 'right' }}>
                       {(source.total_signals ?? 0).toLocaleString()}
                     </td>
-                    <td style={{ padding: '8px 12px', color: 'var(--color-danger)', fontSize: '10px', maxWidth: '200px' }}>
+                    <td style={{ padding: '8px 12px', color: 'var(--color-danger)', fontSize: '13px', maxWidth: '200px' }}>
                       {source.error_msg ? (
                         <span title={source.error_msg} style={{ display: 'block', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                           {source.error_msg}

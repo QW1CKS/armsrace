@@ -47,7 +47,7 @@ export function Ticker({ items, speed = 60 }: TickerProps) {
         top: '50%',
         transform: 'translateY(-50%)',
         fontFamily: 'var(--font-mono)',
-        fontSize: '9px',
+        fontSize: '11px',
         letterSpacing: '0.06em',
         color: 'var(--text-muted)',
         zIndex: 2,

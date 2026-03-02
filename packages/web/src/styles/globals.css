@@ -57,12 +57,12 @@
   --font-mono: 'JetBrains Mono', 'Consolas', monospace;
   --font-sans: 'Inter', -apple-system, 'Segoe UI', system-ui, sans-serif;
 
-  --text-xs:  11px;
-  --text-sm:  12px;
-  --text-md:  14px;
-  --text-lg:  16px;
-  --text-xl:  20px;
-  --text-2xl: 26px;
+  --text-xs:  13px;
+  --text-sm:  14px;
+  --text-md:  15px;
+  --text-lg:  18px;
+  --text-xl:  22px;
+  --text-2xl: 30px;
 
   /* ── Layout ───────────────────────────────────────────────── */
   --nav-height: 48px;
@@ -78,8 +78,8 @@
 
   /* ── Density (overridden by JS) ─────────────────────────── */
   --density-gap: 10px;
-  --density-pad: 12px 14px;
-  --density-font: 12px;
+  --density-pad: 14px 16px;
+  --density-font: 14px;
 }
 
 html, body, #root {
@@ -191,11 +191,14 @@ code, pre, .mono {
 .floating-nav {
   position: fixed;
   top: 12px;
-  left: 50%;
-  transform: translateX(-50%);
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  width: fit-content;
   z-index: 1000;
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 2px;
   padding: 4px;
   background: var(--bg-glass-heavy);
@@ -205,6 +208,7 @@ code, pre, .mono {
   border-radius: 14px;
   box-shadow: var(--shadow-panel);
   animation: fadeIn 400ms ease both;
+  max-width: calc(100vw - 24px);
 }
 
 .nav-brand {
@@ -235,7 +239,7 @@ code, pre, .mono {
 
 .nav-brand-text {
   font-family: var(--font-mono);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 600;
   color: var(--text-primary);
   letter-spacing: 0.06em;
@@ -251,7 +255,7 @@ code, pre, .mono {
   background: transparent;
   cursor: pointer;
   font-family: var(--font-sans);
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 500;
   color: var(--text-secondary);
   white-space: nowrap;
@@ -299,7 +303,7 @@ code, pre, .mono {
 
 .nav-clock {
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: 13px;
   color: var(--text-secondary);
   letter-spacing: 0.03em;
 }
@@ -331,6 +335,12 @@ code, pre, .mono {
   animation: fadeIn 250ms ease both;
 }
 
+/* Allow map interaction when content-panel is not covering it */
+.content-panel ~ .leaflet-container,
+.content-panel ~ div .leaflet-container {
+  pointer-events: auto;
+}
+
 .content-panel-inner {
   flex: 1;
   overflow-y: auto;
@@ -348,7 +358,7 @@ code, pre, .mono {
 
 .content-panel-title {
   font-family: var(--font-sans);
-  font-size: 18px;
+  font-size: 22px;
   font-weight: 600;
   color: var(--text-primary);
   display: flex;
@@ -382,50 +392,123 @@ code, pre, .mono {
   border-color: var(--border-glass);
 }
 
-/* ══ COMMAND CENTER — floating widget layout ═════════════════ */
-.cmd-overview {
+/* ══ COMMAND CENTER — draggable grid layout ══════════════════ */
+.cmd-overview-grid {
   position: fixed;
   top: 72px;
   left: 12px;
   right: 12px;
   bottom: 12px;
   z-index: 100;
+  overflow-y: auto;
+  overflow-x: hidden;
   pointer-events: none;
-  display: grid;
-  grid-template-columns: 260px 1fr 300px;
-  grid-template-rows: 1fr auto;
-  gap: 12px;
 }
 
-.cmd-overview > * {
+/* The react-grid-layout container should also pass through clicks */
+.cmd-overview-grid .overview-grid {
+  pointer-events: none;
+}
+
+/* Individual grid items and toolbar get pointer events back */
+.cmd-overview-grid .grid-widget,
+.cmd-overview-grid .grid-toolbar,
+.cmd-overview-grid .react-grid-item {
   pointer-events: auto;
 }
 
-.cmd-metrics {
-  grid-column: 1;
-  grid-row: 1 / -1;
+/* Grid toolbar (lock/reset) */
+.grid-toolbar {
+  position: absolute;
+  top: -2px;
+  right: 4px;
+  z-index: 200;
   display: flex;
-  flex-direction: column;
-  gap: 10px;
-  max-height: 100%;
-  overflow-y: auto;
+  gap: 6px;
+  pointer-events: auto;
 }
 
-.cmd-right {
-  grid-column: 3;
-  grid-row: 1 / -1;
+.grid-toolbar-btn {
   display: flex;
-  flex-direction: column;
-  gap: 10px;
-  max-height: 100%;
-  overflow-y: auto;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  font: 500 13px/1 var(--font-mono);
+  color: var(--text-muted);
+  background: var(--bg-glass);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 150ms ease;
+}
+.grid-toolbar-btn:hover {
+  color: var(--text-primary);
+  background: var(--bg-hover);
+  border-color: var(--accent);
+}
+.grid-toolbar-btn.active {
+  color: var(--accent);
+  border-color: var(--accent);
 }
 
-.cmd-bottom {
-  grid-column: 2;
-  grid-row: 2;
-  align-self: end;
+/* Grid widget wrapper */
+.grid-widget {
+  height: 100%;
 }
+.grid-widget > .widget-card {
+  height: 100%;
+}
+
+/* Drag handle */
+.grid-drag-handle {
+  cursor: grab;
+  user-select: none;
+}
+.grid-drag-handle:active {
+  cursor: grabbing;
+}
+
+.drag-hint {
+  font-size: 14px;
+  letter-spacing: 2px;
+  color: var(--text-muted);
+  opacity: 0.3;
+  transition: opacity 150ms ease;
+}
+.grid-drag-handle:hover .drag-hint {
+  opacity: 0.7;
+}
+
+/* react-grid-layout overrides */
+.react-grid-placeholder {
+  background: var(--accent) !important;
+  opacity: 0.12 !important;
+  border-radius: var(--radius-lg) !important;
+  border: 2px dashed var(--accent) !important;
+}
+.react-resizable-handle {
+  z-index: 10;
+}
+.react-resizable-handle::after {
+  border-color: var(--text-muted) !important;
+  width: 8px !important;
+  height: 8px !important;
+}
+.react-grid-item.react-draggable-dragging {
+  z-index: 300 !important;
+  box-shadow: 0 12px 40px rgba(0,0,0,.5) !important;
+}
+.react-grid-item > .react-resizable-handle::after {
+  right: 4px !important;
+  bottom: 4px !important;
+}
+
+/* Legacy compat aliases */
+.cmd-overview { display: none; }
+.cmd-metrics { display: none; }
+.cmd-right { display: none; }
+.cmd-bottom { display: none; }
 
 /* Floating widget card */
 .widget-card {
@@ -435,7 +518,7 @@ code, pre, .mono {
   border: 1px solid var(--border-glass);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-float);
-  overflow: hidden;
+  overflow: visible;
   animation: slideUp 300ms ease both;
 }
 
@@ -453,7 +536,7 @@ code, pre, .mono {
 
 .widget-label {
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -462,6 +545,167 @@ code, pre, .mono {
 
 .widget-body {
   padding: var(--density-pad);
+  overflow: hidden;
+}
+
+/* Metric value within widgets */
+.metric-value {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 36px;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  text-shadow: 0 0 20px currentColor;
+}
+
+.metric-label {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--text-muted);
+}
+
+.metric-sublabel {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-top: 2px;
+}
+
+/* ══ LIVE FEED PANEL ═════════════════════════════════════════ */
+.live-feed-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.live-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--color-danger);
+  box-shadow: 0 0 8px var(--color-danger);
+  animation: pulse-glow 1.5s ease infinite;
+}
+
+.live-expand-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border: 1px solid var(--border-subtle);
+  border-radius: 4px;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 10px;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+.live-expand-btn:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+.live-player-wrap {
+  position: relative;
+  width: 100%;
+  height: 0;
+  padding-bottom: 56.25%; /* 16:9 */
+  overflow: hidden;
+  transition: padding-bottom var(--transition-slow);
+  border-bottom: 1px solid var(--border-subtle);
+}
+.live-player-wrap.expanded {
+  padding-bottom: 75%; /* taller */
+}
+
+.live-player-iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+.live-player-label {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 10px;
+  background: linear-gradient(transparent, rgba(0,0,0,0.7));
+  font-family: var(--font-mono);
+  font-size: 10px;
+  pointer-events: none;
+}
+
+.live-player-tag {
+  border: 1px solid;
+  border-radius: 3px;
+  padding: 1px 5px;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+}
+
+.live-channel-list {
+  display: flex;
+  flex-direction: column;
+  max-height: 190px;
+  overflow-y: auto;
+}
+
+.live-channel-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 12px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  transition: background var(--transition-fast);
+  text-align: left;
+}
+.live-channel-btn:hover {
+  background: var(--bg-hover);
+}
+.live-channel-btn.active {
+  background: var(--bg-active);
+}
+.live-channel-btn + .live-channel-btn {
+  border-top: 1px solid var(--border-subtle);
+}
+
+.live-channel-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.live-channel-name {
+  flex: 1;
+  font-size: 13px;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+.live-channel-btn.active .live-channel-name {
+  color: var(--text-primary);
+}
+
+.live-channel-tag {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  opacity: 0.7;
 }
 
 /* ══ CARD — used inside content panels ═══════════════════════ */
@@ -507,9 +751,9 @@ code, pre, .mono {
 }
 
 .chip-btn {
-  padding: 4px 10px;
+  padding: 5px 12px;
   font-family: var(--font-sans);
-  font-size: 11px;
+  font-size: 13px;
   font-weight: 500;
   border: 1px solid var(--border-subtle);
   border-radius: 6px;
@@ -555,7 +799,7 @@ code, pre, .mono {
 }
 
 .pager-btn {
-  padding: 6px 14px;
+  padding: 8px 16px;
   font-size: var(--text-sm);
   font-weight: 500;
   border: 1px solid var(--border-subtle);
@@ -583,10 +827,10 @@ code, pre, .mono {
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  padding: 3px 10px;
+  padding: 4px 12px;
   border-radius: 20px;
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: 13px;
   font-weight: 600;
 }
 
@@ -847,7 +1091,7 @@ code, pre, .mono {
   background: transparent;
   color: var(--text-secondary);
   font-family: var(--font-sans);
-  font-size: 11px;
+  font-size: 13px;
   font-weight: 500;
   cursor: pointer;
   transition: all var(--transition-fast);
@@ -871,7 +1115,7 @@ code, pre, .mono {
 
 .toolbar-btn-label {
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 600;
 }
 
@@ -912,7 +1156,7 @@ code, pre, .mono {
   background: transparent;
   color: var(--text-secondary);
   font-family: var(--font-sans);
-  font-size: 11px;
+  font-size: 13px;
   font-weight: 500;
   cursor: pointer;
   transition: all var(--transition-fast);
@@ -1000,8 +1244,9 @@ code, pre, .mono {
 
 /* ══ RESPONSIVE ══════════════════════════════════════════════ */
 @media (max-width: 1100px) {
-  .cmd-overview {
-    grid-template-columns: 240px 1fr 280px;
+  .cmd-overview-grid {
+    left: 8px;
+    right: 8px;
   }
 }
 
@@ -1009,17 +1254,11 @@ code, pre, .mono {
   .grid-two-pane {
     grid-template-columns: 1fr;
   }
-  .cmd-overview {
-    grid-template-columns: 1fr;
-    grid-template-rows: auto;
-    overflow-y: auto;
-    pointer-events: auto;
-  }
-  .cmd-metrics, .cmd-right {
-    grid-column: 1;
-    grid-row: auto;
-    flex-direction: row;
-    flex-wrap: wrap;
+  .cmd-overview-grid {
+    top: 64px;
+    left: 8px;
+    right: 8px;
+    bottom: 8px;
   }
   .floating-nav {
     top: 8px;

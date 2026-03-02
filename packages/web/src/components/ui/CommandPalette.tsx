@@ -13,7 +13,7 @@ interface CommandItem {
 
 export function CommandPalette({ open, onClose }: { open: boolean; onClose: () => void }) {
   const navigate = useNavigate();
-  const { settings, updateSettings } = useSettings();
+  const { settings, updateSettings, toggleWidget } = useSettings();
   const inputRef = useRef<HTMLInputElement>(null);
   const [query, setQuery] = useState('');
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -105,10 +105,18 @@ export function CommandPalette({ open, onClose }: { open: boolean; onClose: () =
         action: () => { updateSettings({ showMarkers: !settings.showMarkers }); onClose(); },
         keywords: 'markers pins dots toggle',
       },
+      {
+        id: 'toggle-livefeed',
+        label: `${settings.widgets.liveFeed ? 'Hide' : 'Show'} Live Feed`,
+        section: 'Widgets',
+        icon: '📺',
+        action: () => { toggleWidget('liveFeed'); onClose(); },
+        keywords: 'live feed youtube news stream broadcast',
+      },
     );
 
     return items;
-  }, [navigate, onClose, updateSettings, settings.showHeatmap, settings.showMarkers]);
+  }, [navigate, onClose, updateSettings, toggleWidget, settings.showHeatmap, settings.showMarkers, settings.widgets.liveFeed]);
 
   const filtered = useMemo(() => {
     if (!query.trim()) return commands;

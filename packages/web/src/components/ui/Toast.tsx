@@ -31,7 +31,7 @@ export function Toast({ id, title, body, severity, onDismiss }: ToastProps) {
     >
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '10px' }}>
         <div>
-          <div style={{ fontFamily: 'var(--font-mono)', fontSize: '9px', color, letterSpacing: '0.04em', marginBottom: '3px', fontWeight: 600 }}>
+          <div style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color, letterSpacing: '0.04em', marginBottom: '3px', fontWeight: 600 }}>
             {typeLabel}
           </div>
           <div style={{ fontSize: 'var(--text-sm)', fontWeight: 600, color: 'var(--text-primary)', marginBottom: body ? '4px' : 0 }}>

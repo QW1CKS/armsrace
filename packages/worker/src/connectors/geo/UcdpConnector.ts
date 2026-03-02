@@ -30,7 +30,7 @@ export class UcdpConnector extends BaseConnector {
     intervalMs: 24 * 60 * 60_000, // daily
     rateLimitMs: 2000,
     requiresApiKey: false,
-    enabled: true,
+    enabled: false, // UCDP API now requires authentication
     baseUrl: 'https://ucdpapi.pcr.uu.se/api/gedevents',
     attribution: 'Uppsala Conflict Data Program (UCDP)',
     termsUrl: 'https://ucdp.uu.se/pages/faq.html',

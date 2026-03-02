@@ -100,8 +100,8 @@ export function FloatingNav() {
         {/* Status section */}
         <div className="nav-status">
           <span className={`threat-badge ${gii >= 67 ? 'critical' : gii >= 34 ? 'elevated' : 'nominal'}`}>
-            <span style={{ fontSize: '10px', fontWeight: 700 }}>{gii}</span>
-            <span style={{ fontSize: '9px' }}>{threatLabel}</span>
+            <span style={{ fontSize: '12px', fontWeight: 700 }}>{gii}</span>
+            <span style={{ fontSize: '11px' }}>{threatLabel}</span>
           </span>
           <span
             className="nav-live-dot"
