@@ -1,31 +1,39 @@
-/** Design system tokens as JS constants (mirror of globals.css) */
+/** ARMSRACE — Map-First Command Interface Tokens */
 export const colors = {
-  bgBase: '#070B12',
-  bgSurface: '#0D1420',
-  bgRaised: '#111A29',
-  bgOverlay: '#162135',
-  textPrimary: '#E6EDF7',
-  textSecondary: '#97A7C3',
-  textMuted: '#5A6B87',
-  info: '#4EA1FF',
-  warning: '#F5B84B',
-  danger: '#FF5D5D',
-  success: '#49D17D',
-  purple: '#A78BFA',
+  bgBase: '#0a0e17',
+  bgSurface: 'rgba(10, 14, 23, 0.88)',
+  bgRaised: '#111827',
+  bgOverlay: 'rgba(10, 14, 23, 0.72)',
+  bgPanel: 'rgba(10, 14, 23, 0.92)',
+  textPrimary: '#e2e8f0',
+  textSecondary: '#94a3b8',
+  textMuted: '#475569',
+  textBright: '#ffffff',
+  info: '#38bdf8',
+  warning: '#fbbf24',
+  danger: '#f87171',
+  success: '#4ade80',
+  purple: '#a78bfa',
+  cyan: '#22d3ee',
+  amber: '#fbbf24',
 } as const;
 
-/** Map a severity 0-100 to a color string */
+/** Map severity 0-100 to color */
 export function severityColor(severity: number): string {
   if (severity >= 67) return colors.danger;
   if (severity >= 34) return colors.warning;
   return colors.success;
 }
 
-/** Recharts dark theme config */
+/** Recharts theme */
 export const chartTheme = {
   backgroundColor: 'transparent',
+  text: colors.textSecondary,
   textColor: colors.textSecondary,
-  gridColor: 'rgba(150,167,195,0.08)',
+  grid: 'rgba(148, 163, 184, 0.06)',
+  gridColor: 'rgba(148, 163, 184, 0.06)',
+  tooltipBg: colors.bgRaised,
   tooltipBackground: colors.bgRaised,
-  tooltipBorder: 'rgba(150,167,195,0.18)',
+  tooltipBorder: 'rgba(148, 163, 184, 0.12)',
+  colors: [colors.info, colors.danger, colors.warning, colors.success, colors.purple],
 };

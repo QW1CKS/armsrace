@@ -16,15 +16,15 @@ const HORIZON_LABELS: Record<string, string> = {
 function DisclaimerBanner() {
   return (
     <div style={{
-      background: 'rgba(245,184,75,0.08)',
-      border: '1px solid rgba(245,184,75,0.3)',
+      background: 'rgba(251,191,36,0.05)',
+      border: '1px solid rgba(251,191,36,0.15)',
       borderRadius: 'var(--radius-md)',
       padding: '12px 16px',
-      fontSize: 'var(--text-xs)',
+      fontSize: '11px',
       color: 'var(--text-secondary)',
       lineHeight: 1.6,
     }}>
-      <span style={{ fontWeight: 600, color: '#F5B84B' }}>DISCLAIMER: </span>
+      <span style={{ fontWeight: 600, color: 'var(--color-warning)' }}>Disclaimer: </span>
       {APP_DISCLAIMER}
     </div>
   );
@@ -56,8 +56,8 @@ export default function Predictions() {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-      <h2 style={{ fontSize: 'var(--text-lg)', fontWeight: 700, color: 'var(--text-primary)', margin: 0 }}>
-        Predictions & Scenarios
+      <h2 className="section-title" style={{ margin: 0 }}>
+        Forecast Engine
       </h2>
 
       <DisclaimerBanner />
@@ -78,8 +78,8 @@ export default function Predictions() {
           if (items.length === 0) return null;
           return (
             <section key={horizon}>
-              <h3 style={{ fontSize: 'var(--text-base)', fontWeight: 600, color: 'var(--text-secondary)', margin: '0 0 10px 0' }}>
-                {HORIZON_LABELS[horizon] ?? horizon} Outlook
+              <h3 style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)', margin: '0 0 10px 0' }}>
+                ▸ {HORIZON_LABELS[horizon] ?? horizon} Outlook
               </h3>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '12px' }}>
                 {items.map((f) => {

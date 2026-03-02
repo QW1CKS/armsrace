@@ -21,35 +21,39 @@ export class Writer {
          @url, @rawJson, @publishedAt, @ingestedAt, 0)
     `);
 
-    const insertMany = db.transaction((batch: Signal[]) => {
-      let count = 0;
-      for (const s of batch) {
-        const result = insert.run({
-          id: s.id,
-          sourceId: s.sourceId,
-          category: s.category,
-          subcategory: s.subcategory ?? null,
-          title: s.title,
-          summary: s.summary ?? null,
-          severity: s.severity,
-          confidence: s.confidence,
-          lat: s.lat ?? null,
-          lon: s.lon ?? null,
-          countryCode: s.countryCode ?? null,
-          region: s.region ?? null,
-          url: s.url ?? null,
-          rawJson: s.rawJson ? JSON.stringify(s.rawJson) : null,
-          publishedAt: s.publishedAt.getTime(),
-          ingestedAt: Date.now(),
-        });
-        if (result.changes > 0) count++;
-      }
-      return count;
-    });
-
     let total = 0;
     for (let i = 0; i < signals.length; i += BATCH_SIZE) {
-      total += insertMany(signals.slice(i, i + BATCH_SIZE));
+      const batch = signals.slice(i, i + BATCH_SIZE);
+      db.exec('BEGIN');
+      try {
+        let count = 0;
+        for (const s of batch) {
+          const result = insert.run({
+            id: s.id,
+            sourceId: s.sourceId,
+            category: s.category,
+            subcategory: s.subcategory ?? null,
+            title: s.title,
+            summary: s.summary ?? null,
+            severity: s.severity,
+            confidence: s.confidence,
+            lat: s.lat ?? null,
+            lon: s.lon ?? null,
+            countryCode: s.countryCode ?? null,
+            region: s.region ?? null,
+            url: s.url ?? null,
+            rawJson: s.rawJson ? JSON.stringify(s.rawJson) : null,
+            publishedAt: s.publishedAt.getTime(),
+            ingestedAt: Date.now(),
+          });
+          if (result.changes > 0) count++;
+        }
+        db.exec('COMMIT');
+        total += count;
+      } catch (e) {
+        db.exec('ROLLBACK');
+        throw e;
+      }
     }
 
     return total;
@@ -65,8 +69,9 @@ export class Writer {
       VALUES (@id, @signalId, @lat, @lon, @magnitude, @eventType, @timestamp)
     `);
 
-    const insertMany = db.transaction((batch: Signal[]) => {
-      for (const s of batch) {
+    db.exec('BEGIN');
+    try {
+      for (const s of geoSignals) {
         insert.run({
           id: `geo_${s.id}`,
           signalId: s.id,
@@ -77,9 +82,11 @@ export class Writer {
           timestamp: s.publishedAt.getTime(),
         });
       }
-    });
-
-    insertMany(geoSignals);
+      db.exec('COMMIT');
+    } catch (e) {
+      db.exec('ROLLBACK');
+      throw e;
+    }
   }
 
   updateSourceHealth(

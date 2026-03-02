@@ -50,8 +50,9 @@ export class CoinGeckoConnector extends BaseConnector {
     `);
 
     const now = Date.now();
-    const insertMany = db.transaction((rows: typeof data) => {
-      for (const c of rows) {
+    db.exec('BEGIN');
+    try {
+      for (const c of data) {
         insertSnap.run({
           symbol: c.symbol.toUpperCase(),
           name: c.name,
@@ -63,9 +64,11 @@ export class CoinGeckoConnector extends BaseConnector {
           snapshotAt: now,
         });
       }
-    });
-
-    insertMany(data);
+      db.exec('COMMIT');
+    } catch (e) {
+      db.exec('ROLLBACK');
+      throw e;
+    }
 
     // Emit signal for large moves
     return data

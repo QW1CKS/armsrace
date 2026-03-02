@@ -46,23 +46,15 @@ export default function Geopolitics() {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '8px' }}>
-        <h2 style={{ fontSize: 'var(--text-lg)', fontWeight: 700, color: 'var(--text-primary)', margin: 0 }}>
+        <h2 className="section-title" style={{ margin: 0 }}>
           Geopolitics
         </h2>
-        <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', gap: '4px', flexWrap: 'wrap' }}>
           {regions.map((r) => (
             <button
               key={r}
               onClick={() => setActiveRegion(r)}
-              style={{
-                padding: '4px 12px',
-                fontSize: 'var(--text-xs)',
-                borderRadius: 'var(--radius-sm)',
-                border: `1px solid ${activeRegion === r ? 'var(--color-info)' : 'var(--border-subtle)'}`,
-                background: activeRegion === r ? 'rgba(137,180,250,0.1)' : 'transparent',
-                color: activeRegion === r ? 'var(--color-info)' : 'var(--text-muted)',
-                cursor: 'pointer',
-              }}
+              className={`chip-btn${activeRegion === r ? ' active' : ''}`}
             >
               {r}
             </button>
@@ -78,7 +70,7 @@ export default function Geopolitics() {
               <Spinner />
             </div>
           ) : filtered.length === 0 ? (
-            <div style={{ padding: '24px', textAlign: 'center', color: 'var(--text-muted)', fontSize: 'var(--text-sm)' }}>
+            <div style={{ padding: '24px', textAlign: 'center', color: 'var(--text-muted)', fontFamily: 'var(--font-mono)', fontSize: '10px', letterSpacing: '0.1em' }}>
               No conflict signals
             </div>
           ) : (
@@ -140,20 +132,20 @@ export default function Geopolitics() {
 
           <Card title="Travel Advisories">
             {advisorySignals.length === 0 ? (
-              <div style={{ padding: '12px 0', textAlign: 'center', color: 'var(--text-muted)', fontSize: 'var(--text-sm)' }}>
+              <div style={{ padding: '12px 0', textAlign: 'center', color: 'var(--text-muted)', fontFamily: 'var(--font-mono)', fontSize: '10px', letterSpacing: '0.1em' }}>
                 No advisories
               </div>
             ) : (
               <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', maxHeight: '280px', overflowY: 'auto' }}>
                 {advisorySignals.slice(0, 20).map((s) => (
                   <div key={s.id} style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '6px 0', borderBottom: '1px solid var(--border-subtle)' }}>
-                    <span style={{ fontSize: 'var(--text-xs)', color: 'var(--text-muted)', minWidth: '28px' }}>
+                    <span style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: 'var(--text-muted)', minWidth: '28px', letterSpacing: '0.06em' }}>
                       {s.country_code ?? '??'}
                     </span>
-                    <span style={{ flex: 1, fontSize: 'var(--text-xs)', color: 'var(--text-secondary)', lineHeight: 1.4 }}>
+                    <span style={{ flex: 1, fontSize: '11px', color: 'var(--text-secondary)', lineHeight: 1.4 }}>
                       {s.title}
                     </span>
-                    <span style={{ fontSize: 'var(--text-xs)', color: severityColor(s.severity), fontWeight: 600, flexShrink: 0 }}>
+                    <span style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: severityColor(s.severity), fontWeight: 600, flexShrink: 0, textShadow: `0 0 4px ${severityColor(s.severity)}` }}>
                       L{Math.ceil((s.severity / 100) * 4)}
                     </span>
                   </div>

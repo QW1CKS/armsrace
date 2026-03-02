@@ -12,23 +12,28 @@ interface ToastProps {
 
 export function Toast({ id, title, body, severity, onDismiss }: ToastProps) {
   const color = severityColor(severity);
+  const typeLabel = severity >= 67 ? 'Critical' : severity >= 34 ? 'Warning' : 'Info';
 
   return (
     <div
       className="fade-in"
       style={{
-        background: 'var(--bg-raised)',
-        border: `1px solid ${color}44`,
+        background: 'var(--bg-glass-heavy)',
+        backdropFilter: 'blur(16px)',
+        border: `1px solid ${color}33`,
         borderLeft: `3px solid ${color}`,
         borderRadius: 'var(--radius-md)',
-        padding: '10px 14px',
+        padding: '10px 12px',
         maxWidth: '340px',
-        boxShadow: 'var(--shadow-elevated)',
+        boxShadow: 'var(--shadow-float)',
         position: 'relative',
       }}
     >
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '12px' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '10px' }}>
         <div>
+          <div style={{ fontFamily: 'var(--font-mono)', fontSize: '9px', color, letterSpacing: '0.04em', marginBottom: '3px', fontWeight: 600 }}>
+            {typeLabel}
+          </div>
           <div style={{ fontSize: 'var(--text-sm)', fontWeight: 600, color: 'var(--text-primary)', marginBottom: body ? '4px' : 0 }}>
             {title}
           </div>
@@ -42,13 +47,13 @@ export function Toast({ id, title, body, severity, onDismiss }: ToastProps) {
           onClick={() => onDismiss(id)}
           style={{
             background: 'none',
-            border: 'none',
+            border: '1px solid var(--border-subtle)',
+            borderRadius: '4px',
             cursor: 'pointer',
             color: 'var(--text-muted)',
-            fontSize: '16px',
-            padding: '0',
-            lineHeight: 1,
-            marginTop: '-2px',
+            fontSize: '12px',
+            padding: '0 4px',
+            lineHeight: 1.2,
           }}
         >×</button>
       </div>

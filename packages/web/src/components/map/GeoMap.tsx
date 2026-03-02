@@ -51,8 +51,8 @@ export function GeoMap({
   }, []);
 
   const layerOptions = [
-    { id: 'markers', label: 'Signal Markers', enabled: layers.markers, onToggle: toggleLayer },
-    { id: 'heatmap', label: 'Heat Density', enabled: layers.heatmap, onToggle: toggleLayer },
+    { id: 'markers', label: 'SIG MARKERS', enabled: layers.markers, onToggle: toggleLayer },
+    { id: 'heatmap', label: 'HEAT DENSITY', enabled: layers.heatmap, onToggle: toggleLayer },
   ];
 
   const heatmapPoints = events.map((e) => ({
@@ -62,20 +62,44 @@ export function GeoMap({
   }));
 
   return (
-    <div style={{ position: 'relative', height, borderRadius: 'var(--radius-md)', overflow: 'hidden' }}>
+    <div style={{
+      position: 'relative',
+      height,
+      overflow: 'hidden',
+      border: '1px solid var(--border-subtle)',
+      background: 'var(--bg-surface)',
+    }} className="card-surface">
+      {/* HUD corner label */}
+      <div style={{
+        position: 'absolute',
+        top: '8px',
+        left: '12px',
+        zIndex: 1000,
+        fontFamily: 'var(--font-mono)',
+        fontSize: '9px',
+        color: 'var(--color-cyan)',
+        letterSpacing: '0.12em',
+        textShadow: '0 0 6px rgba(0,212,255,0.4)',
+        textTransform: 'uppercase',
+      }}>
+        ▸ GEO-INT THEATER · {events.length} SIGNALS
+      </div>
       {loading && (
         <div style={{
           position: 'absolute',
           inset: 0,
-          background: 'rgba(17,17,27,0.6)',
+          background: 'rgba(2,4,8,0.75)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
           zIndex: 2000,
-          fontSize: 'var(--text-sm)',
-          color: 'var(--text-muted)',
+          fontFamily: 'var(--font-mono)',
+          fontSize: '10px',
+          letterSpacing: '0.12em',
+          color: 'var(--color-cyan)',
+          textTransform: 'uppercase',
         }}>
-          Loading map data…
+          LOADING MAP DATA…
         </div>
       )}
 

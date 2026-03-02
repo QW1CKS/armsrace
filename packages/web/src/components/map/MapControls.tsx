@@ -18,17 +18,17 @@ export function MapControls({ layers }: MapControlsProps) {
       top: '12px',
       right: '12px',
       zIndex: 1000,
-      background: 'rgba(17, 17, 27, 0.92)',
-      border: '1px solid rgba(108, 112, 134, 0.3)',
-      borderRadius: '8px',
+      background: 'var(--bg-glass-heavy)',
+      backdropFilter: 'blur(16px)',
+      border: '1px solid var(--border-glass)',
+      borderRadius: 'var(--radius-md)',
       padding: '10px 12px',
       display: 'flex',
       flexDirection: 'column',
       gap: '6px',
-      backdropFilter: 'blur(4px)',
-      minWidth: '140px',
+      minWidth: '130px',
     }}>
-      <div style={{ fontSize: '10px', textTransform: 'uppercase', letterSpacing: '0.08em', color: '#6c7086', marginBottom: '2px' }}>
+      <div style={{ fontFamily: 'var(--font-sans)', fontSize: '10px', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '2px' }}>
         Layers
       </div>
       {layers.map((layer) => (
@@ -39,8 +39,8 @@ export function MapControls({ layers }: MapControlsProps) {
             alignItems: 'center',
             gap: '8px',
             cursor: 'pointer',
-            fontSize: '12px',
-            color: layer.enabled ? '#cdd6f4' : '#6c7086',
+            fontSize: '11px',
+            color: layer.enabled ? 'var(--text-primary)' : 'var(--text-muted)',
             userSelect: 'none',
           }}
         >
@@ -48,7 +48,7 @@ export function MapControls({ layers }: MapControlsProps) {
             type="checkbox"
             checked={layer.enabled}
             onChange={() => layer.onToggle(layer.id)}
-            style={{ accentColor: '#89b4fa', cursor: 'pointer' }}
+            style={{ accentColor: 'var(--color-info)', cursor: 'pointer' }}
           />
           {layer.label}
         </label>

@@ -55,8 +55,9 @@ export class YahooFinanceConnector extends BaseConnector {
     `);
 
     const now = Date.now();
-    const insertMany = db.transaction((rows: typeof results) => {
-      for (const r of rows) {
+    db.exec('BEGIN');
+    try {
+      for (const r of results) {
         const meta = SYMBOLS.find((s) => s.symbol === r.symbol) ?? { name: String(r.shortName ?? r.symbol), assetClass: 'stock' };
         insertSnap.run({
           symbol: r.symbol,
@@ -69,9 +70,11 @@ export class YahooFinanceConnector extends BaseConnector {
           snapshotAt: now,
         });
       }
-    });
-
-    insertMany(results);
+      db.exec('COMMIT');
+    } catch (e) {
+      db.exec('ROLLBACK');
+      throw e;
+    }
 
     // Return market shock signals for large moves
     return results

@@ -50,7 +50,9 @@ router.get('/', (req, res, next) => {
       LIMIT @limit OFFSET @offset
     `).all(bindParams);
 
-    const total = (db.prepare(`SELECT COUNT(*) as cnt FROM signals WHERE ${where}`).get(bindParams) as { cnt: number }).cnt;
+    const total = (db.prepare(`SELECT COUNT(*) as cnt FROM signals WHERE ${where}`).get(
+      Object.fromEntries(Object.entries(bindParams).filter(([k]) => k !== 'limit' && k !== 'offset'))
+    ) as { cnt: number }).cnt;
 
     res.json({ data: rows, total, offset: params.offset, limit: params.limit, timestamp: Date.now() });
   } catch (err) {

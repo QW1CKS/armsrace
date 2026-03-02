@@ -29,7 +29,8 @@ export class EscalationScoreComputer {
         (@countryCode, @countryName, @score, @trend, @delta24h, @topSignals, @computedAt)
     `);
 
-    const insertMany = db.transaction(() => {
+    db.exec('BEGIN');
+    try {
       for (const row of countries) {
         // Score for last 24h
         const now24 = db.prepare(`
@@ -67,8 +68,10 @@ export class EscalationScoreComputer {
           computedAt: Date.now(),
         });
       }
-    });
-
-    insertMany();
+      db.exec('COMMIT');
+    } catch (e) {
+      db.exec('ROLLBACK');
+      throw e;
+    }
   }
 }

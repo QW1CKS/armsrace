@@ -18,7 +18,7 @@ function timeAgo(epochMs: number): string {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function SignalList({ signals, loading }: { signals: any[]; loading: boolean }) {
   if (loading) return <div style={{ display: 'flex', justifyContent: 'center', padding: '20px' }}><Spinner size={20} /></div>;
-  if (!signals.length) return <div style={{ padding: '16px', textAlign: 'center', color: 'var(--text-muted)', fontSize: 'var(--text-sm)' }}>No signals</div>;
+  if (!signals.length) return <div style={{ padding: '16px', textAlign: 'center', color: 'var(--text-muted)', fontSize: '12px' }}>No signals</div>;
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '0' }}>
       {signals.slice(0, 20).map((s, i) => (
@@ -71,7 +71,7 @@ export default function Infrastructure() {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-      <h2 style={{ fontSize: 'var(--text-lg)', fontWeight: 700, color: 'var(--text-primary)', margin: 0 }}>
+      <h2 className="section-title" style={{ margin: 0 }}>
         Infrastructure
       </h2>
 
@@ -79,19 +79,19 @@ export default function Infrastructure() {
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '12px' }}>
         <Card glow={infraStressValue >= 67 ? 'danger' : infraStressValue >= 34 ? 'warning' : undefined}>
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '8px 0' }}>
-            <RiskGauge value={infraStressValue} label="Infra Stress" size={110} />
+            <RiskGauge value={infraStressValue} label="INFRA STRESS" size={110} />
           </div>
         </Card>
         <Card>
           <div style={{ padding: '12px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-            <div style={{ fontSize: 'var(--text-xs)', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Summary</div>
+            <div style={{ fontFamily: 'var(--font-sans)', fontSize: '10px', color: 'var(--text-secondary)', fontWeight: 600 }}>Summary</div>
             {[
-              { label: 'Internet Events', count: infraSignals.length },
-              { label: 'Maritime Events', count: maritimeSignals.length },
-              { label: 'Aviation Events', count: aviationSignals.length },
+              { label: 'Net/Cloud', count: infraSignals.length },
+              { label: 'Maritime', count: maritimeSignals.length },
+              { label: 'Aviation', count: aviationSignals.length },
             ].map((item) => (
-              <div key={item.label} style={{ display: 'flex', justifyContent: 'space-between', fontSize: 'var(--text-sm)' }}>
-                <span style={{ color: 'var(--text-secondary)' }}>{item.label}</span>
+              <div key={item.label} style={{ display: 'flex', justifyContent: 'space-between', fontFamily: 'var(--font-mono)', fontSize: '11px' }}>
+                <span style={{ color: 'var(--text-secondary)', letterSpacing: '0.02em' }}>{item.label}</span>
                 <span style={{ color: 'var(--text-primary)', fontWeight: 600 }}>{item.count}</span>
               </div>
             ))}
@@ -101,7 +101,7 @@ export default function Infrastructure() {
 
       {/* Three panels */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '16px' }}>
-        <Card title="Internet / Cloud Anomalies">
+        <Card title="Net/Cloud Anomalies">
           <SignalList signals={infraSignals} loading={infraQuery.isLoading} />
         </Card>
         <Card title="Maritime">

@@ -17,12 +17,20 @@ export function Spinner({ size = 24, color = 'var(--color-info)' }: SpinnerProps
       <circle
         cx="12"
         cy="12"
-        r="9"
+        r="10"
+        fill="none"
+        stroke="var(--border-subtle)"
+        strokeWidth="2"
+      />
+      <circle
+        cx="12"
+        cy="12"
+        r="10"
         fill="none"
         stroke={color}
-        strokeWidth="2.5"
+        strokeWidth="2"
+        strokeDasharray="32 32"
         strokeLinecap="round"
-        strokeDasharray="40 20"
       />
     </svg>
   );

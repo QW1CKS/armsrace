@@ -54,16 +54,7 @@ export default function Alerts() {
     return (
       <button
         onClick={onClick}
-        style={{
-          padding: '3px 10px',
-          fontSize: 'var(--text-xs)',
-          borderRadius: 'var(--radius-sm)',
-          border: `1px solid ${active ? 'var(--color-info)' : 'var(--border-subtle)'}`,
-          background: active ? 'rgba(137,180,250,0.1)' : 'transparent',
-          color: active ? 'var(--color-info)' : 'var(--text-muted)',
-          cursor: 'pointer',
-          textTransform: 'capitalize',
-        }}
+        className={`chip-btn${active ? ' active' : ''}`}
       >
         {children}
       </button>
@@ -71,12 +62,12 @@ export default function Alerts() {
   }
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '8px' }}>
-        <h2 style={{ fontSize: 'var(--text-lg)', fontWeight: 700, color: 'var(--text-primary)', margin: 0 }}>
+    <div className="page-stack">
+      <div className="section-header">
+        <h2 className="section-title">
           Alert Center{unreadCount > 0 && (
-            <span style={{ fontSize: 'var(--text-sm)', fontWeight: 400, color: 'var(--color-warning)', marginLeft: '8px' }}>
-              {unreadCount} unread
+            <span style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', fontWeight: 400, color: 'var(--color-danger)', marginLeft: '10px' }}>
+              ({unreadCount} unread)
             </span>
           )}
         </h2>
@@ -84,25 +75,25 @@ export default function Alerts() {
 
       {/* Filters */}
       <Card>
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '16px', alignItems: 'center' }}>
-          <div style={{ display: 'flex', gap: '4px', alignItems: 'center' }}>
-            <span style={{ fontSize: 'var(--text-xs)', color: 'var(--text-muted)', marginRight: '4px' }}>Severity:</span>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '14px', alignItems: 'center' }}>
+          <div style={{ display: 'flex', gap: '3px', alignItems: 'center' }}>
+            <span style={{ fontSize: '11px', color: 'var(--text-muted)', marginRight: '4px' }}>Severity:</span>
             {SEVERITY_FILTERS.map((f) => (
               <FilterButton key={f.label} active={severityMin === f.min} onClick={() => setSeverityMin(f.min)}>
                 {f.label}
               </FilterButton>
             ))}
           </div>
-          <div style={{ display: 'flex', gap: '4px', alignItems: 'center' }}>
-            <span style={{ fontSize: 'var(--text-xs)', color: 'var(--text-muted)', marginRight: '4px' }}>Status:</span>
+          <div style={{ display: 'flex', gap: '3px', alignItems: 'center' }}>
+            <span style={{ fontSize: '11px', color: 'var(--text-muted)', marginRight: '4px' }}>Status:</span>
             {STATUS_FILTERS.map((f) => (
               <FilterButton key={f} active={statusFilter === f} onClick={() => setStatusFilter(f)}>
-                {f}
+                {f.charAt(0).toUpperCase() + f.slice(1)}
               </FilterButton>
             ))}
           </div>
-          <div style={{ display: 'flex', gap: '4px', alignItems: 'center', flexWrap: 'wrap' }}>
-            <span style={{ fontSize: 'var(--text-xs)', color: 'var(--text-muted)', marginRight: '4px' }}>Type:</span>
+          <div style={{ display: 'flex', gap: '3px', alignItems: 'center', flexWrap: 'wrap' }}>
+            <span style={{ fontSize: '11px', color: 'var(--text-muted)', marginRight: '4px' }}>Type:</span>
             {TYPE_FILTERS.map((f) => (
               <FilterButton key={f} active={typeFilter === f} onClick={() => setTypeFilter(f)}>
                 {f === 'all' ? 'All' : f.replace(/_/g, ' ')}
@@ -122,39 +113,23 @@ export default function Alerts() {
 
       {/* Pagination */}
       {(alerts.length === PAGE_SIZE || page > 0) && (
-        <div style={{ display: 'flex', justifyContent: 'center', gap: '8px' }}>
+        <div className="pager">
           <button
+            className="pager-btn"
             disabled={page === 0}
             onClick={() => setPage((p) => p - 1)}
-            style={{
-              padding: '6px 16px',
-              fontSize: 'var(--text-sm)',
-              borderRadius: 'var(--radius-sm)',
-              border: '1px solid var(--border-subtle)',
-              background: 'transparent',
-              color: page === 0 ? 'var(--text-muted)' : 'var(--text-secondary)',
-              cursor: page === 0 ? 'default' : 'pointer',
-            }}
           >
-            Previous
+            ◂ Prev
           </button>
-          <span style={{ fontSize: 'var(--text-sm)', color: 'var(--text-muted)', alignSelf: 'center' }}>
+          <span style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--text-muted)', alignSelf: 'center' }}>
             Page {page + 1}
           </span>
           <button
+            className="pager-btn"
             disabled={alerts.length < PAGE_SIZE}
             onClick={() => setPage((p) => p + 1)}
-            style={{
-              padding: '6px 16px',
-              fontSize: 'var(--text-sm)',
-              borderRadius: 'var(--radius-sm)',
-              border: '1px solid var(--border-subtle)',
-              background: 'transparent',
-              color: alerts.length < PAGE_SIZE ? 'var(--text-muted)' : 'var(--text-secondary)',
-              cursor: alerts.length < PAGE_SIZE ? 'default' : 'pointer',
-            }}
           >
-            Next
+            Next ▸
           </button>
         </div>
       )}

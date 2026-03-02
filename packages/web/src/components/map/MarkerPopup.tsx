@@ -24,54 +24,53 @@ export function MarkerPopup({ data }: MarkerPopupProps) {
 
   return (
     <div style={{
-      minWidth: '220px',
+      minWidth: '210px',
       maxWidth: '280px',
-      fontFamily: 'inherit',
       fontSize: '12px',
-      color: '#cdd6f4',
+      color: 'var(--text-primary)',
     }}>
       {/* Category + severity */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '6px' }}>
         <span style={{
           display: 'inline-block',
-          width: 8,
-          height: 8,
+          width: 7,
+          height: 7,
           borderRadius: '50%',
           background: color,
           flexShrink: 0,
         }} />
-        <span style={{ fontSize: '10px', textTransform: 'uppercase', color, fontWeight: 600, letterSpacing: '0.05em' }}>
-          {data.category}
+        <span style={{ fontSize: '10px', textTransform: 'capitalize', color, fontWeight: 600 }}>
+          {data.category.replace(/_/g, ' ')}
         </span>
-        <span style={{ marginLeft: 'auto', fontSize: '10px', color: '#6c7086' }}>{timeAgo}</span>
+        <span style={{ marginLeft: 'auto', fontSize: '10px', color: 'var(--text-muted)' }}>{timeAgo}</span>
       </div>
 
       {/* Title */}
-      <div style={{ fontWeight: 600, lineHeight: 1.4, marginBottom: '6px', color: '#cdd6f4' }}>
+      <div style={{ fontWeight: 600, lineHeight: 1.4, marginBottom: '6px', color: 'var(--text-primary)', fontSize: '12px' }}>
         {data.title}
       </div>
 
       {/* Body */}
       {data.body && (
-        <div style={{ color: '#a6adc8', lineHeight: 1.5, marginBottom: '8px', fontSize: '11px' }}>
+        <div style={{ color: 'var(--text-secondary)', lineHeight: 1.5, marginBottom: '8px', fontSize: '11px' }}>
           {data.body.slice(0, 140)}{data.body.length > 140 ? '…' : ''}
         </div>
       )}
 
       {/* Meta row */}
-      <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', borderTop: '1px solid #313244', paddingTop: '6px' }}>
-        <span style={{ color: '#6c7086' }}>Severity:</span>
+      <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', borderTop: '1px solid var(--border-subtle)', paddingTop: '6px', fontSize: '10px' }}>
+        <span style={{ color: 'var(--text-muted)' }}>Sev:</span>
         <span style={{ color }}>{data.severity}</span>
         {data.country && (
           <>
-            <span style={{ color: '#6c7086' }}>·</span>
-            <span style={{ color: '#cdd6f4' }}>{data.country}</span>
+            <span style={{ color: 'var(--text-muted)' }}>·</span>
+            <span style={{ color: 'var(--text-primary)' }}>{data.country}</span>
           </>
         )}
         {data.source && (
           <>
-            <span style={{ color: '#6c7086' }}>·</span>
-            <span style={{ color: '#a6adc8' }}>{data.source}</span>
+            <span style={{ color: 'var(--text-muted)' }}>·</span>
+            <span style={{ color: 'var(--text-secondary)' }}>{data.source}</span>
           </>
         )}
       </div>

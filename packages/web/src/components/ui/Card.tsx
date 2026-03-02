@@ -10,26 +10,26 @@ interface CardProps {
   padding?: string | number;
 }
 
-export function Card({ children, title, headerRight, style, className, glow = 'none', padding = '16px' }: CardProps) {
+export function Card({ children, title, headerRight, style, className, glow = 'none', padding = '14px' }: CardProps) {
   const glowColors: Record<string, string> = {
-    info: '#4EA1FF',
-    warning: '#F5B84B',
-    danger: '#FF5D5D',
-    success: '#49D17D',
+    info: 'var(--color-info)',
+    warning: 'var(--color-warning)',
+    danger: 'var(--color-danger)',
+    success: 'var(--color-success)',
     none: 'transparent',
   };
 
+  const borderColor = glow !== 'none' ? `${glowColors[glow]}33` : 'var(--border-subtle)';
+
   return (
     <div
-      className={className}
+      className={`card-surface${className ? ` ${className}` : ''}`}
       style={{
-        background: 'var(--bg-surface)',
-        border: `1px solid ${glow !== 'none' ? `${glowColors[glow]}33` : 'var(--border-subtle)'}`,
+        background: 'rgba(255, 255, 255, 0.02)',
+        border: `1px solid ${borderColor}`,
         borderRadius: 'var(--radius-md)',
-        boxShadow: glow !== 'none'
-          ? `var(--shadow-card), 0 0 12px ${glowColors[glow]}22`
-          : 'var(--shadow-card)',
         overflow: 'hidden',
+        position: 'relative',
         ...style,
       }}
     >
@@ -38,16 +38,22 @@ export function Card({ children, title, headerRight, style, className, glow = 'n
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          padding: '10px 16px',
+          padding: '10px 14px',
           borderBottom: '1px solid var(--border-subtle)',
         }}>
-          <span style={{ fontSize: 'var(--text-sm)', fontWeight: 600, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.07em' }}>
+          <span style={{
+            fontFamily: 'var(--font-sans)',
+            fontSize: '12px',
+            fontWeight: 600,
+            color: 'var(--text-primary)',
+            letterSpacing: '0.02em',
+          }}>
             {title}
           </span>
           {headerRight}
         </div>
       )}
-      <div style={{ padding }}>{children}</div>
+      <div style={{ padding, position: 'relative', zIndex: 1 }}>{children}</div>
     </div>
   );
 }

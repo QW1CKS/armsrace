@@ -44,7 +44,9 @@ router.get('/', (req, res, next) => {
       signalIds: JSON.parse(r.signal_ids as string ?? '[]'),
     }));
 
-    const total = (db.prepare(`SELECT COUNT(*) as cnt FROM alerts WHERE ${where}`).get(bindParams) as { cnt: number }).cnt;
+    const total = (db.prepare(`SELECT COUNT(*) as cnt FROM alerts WHERE ${where}`).get(
+      Object.fromEntries(Object.entries(bindParams).filter(([k]) => k !== 'limit' && k !== 'offset'))
+    ) as { cnt: number }).cnt;
 
     res.json({ data: alerts, total, offset: params.offset, limit: params.limit, timestamp: Date.now() });
   } catch (err) {

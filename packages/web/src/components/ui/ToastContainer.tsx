@@ -10,11 +10,11 @@ export function ToastContainer() {
   return (
     <div style={{
       position: 'fixed',
-      bottom: '20px',
-      right: '20px',
+      bottom: '24px',
+      right: '24px',
       display: 'flex',
       flexDirection: 'column-reverse',
-      gap: '8px',
+      gap: '10px',
       zIndex: 9999,
       pointerEvents: 'none',
     }}>

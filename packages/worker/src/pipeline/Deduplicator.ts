@@ -1,6 +1,6 @@
 import type { Signal } from '@armsrace/shared';
 import { signalHash } from '@armsrace/shared';
-import { getDb } from '../../db/client.js';
+import { getDb } from '../db/client.js';
 
 /** Filters out signals whose dedup hash is already recorded in the DB */
 export class Deduplicator {

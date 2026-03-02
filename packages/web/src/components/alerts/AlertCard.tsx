@@ -28,31 +28,33 @@ export function AlertCard({ alert, onAcknowledge, onDismiss, compact = false }: 
     <div
       className="fade-in"
       style={{
-        background: 'var(--bg-raised)',
-        border: `1px solid ${color}33`,
+        background: 'var(--bg-surface)',
+        border: `1px solid ${color}22`,
         borderLeft: `3px solid ${color}`,
-        borderRadius: 'var(--radius-md)',
-        padding: compact ? '10px 12px' : '14px 16px',
+        borderRadius: '10px',
+        padding: compact ? '8px 10px' : '12px 14px',
         display: 'flex',
         flexDirection: 'column',
-        gap: compact ? '6px' : '10px',
+        gap: compact ? '5px' : '8px',
+        position: 'relative',
       }}
     >
+
       {/* Header */}
       <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '8px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap', flex: 1 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap', flex: 1 }}>
           <Badge severity={alert.severity} label={String(alert.type ?? '').replace(/_/g, ' ')} />
           {isAcknowledged && (
-            <span style={{ fontSize: 'var(--text-xs)', color: 'var(--text-muted)' }}>✓ ACK</span>
+            <span style={{ fontSize: '10px', color: 'var(--color-success)' }}>✓ Ack</span>
           )}
         </div>
-        <span style={{ fontSize: 'var(--text-xs)', color: 'var(--text-muted)', whiteSpace: 'nowrap', flexShrink: 0 }}>
+        <span style={{ fontFamily: 'var(--font-mono)', fontSize: '9px', color: 'var(--text-muted)', whiteSpace: 'nowrap', letterSpacing: '0.05em' }}>
           {triggeredAt}
         </span>
       </div>
 
       {/* Title */}
-      <div style={{ fontSize: 'var(--text-sm)', fontWeight: 600, color: 'var(--text-primary)', lineHeight: 1.4 }}>
+      <div style={{ fontFamily: 'var(--font-sans)', fontSize: 'var(--text-sm)', fontWeight: 600, color: 'var(--text-primary)', lineHeight: 1.4 }}>
         {alert.title}
       </div>
 
@@ -67,17 +69,18 @@ export function AlertCard({ alert, onAcknowledge, onDismiss, compact = false }: 
 
           {/* Entities */}
           {entities.length > 0 && (
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px' }}>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '3px' }}>
               {entities.slice(0, 6).map((entity, i) => (
                 <span
                   key={i}
                   style={{
-                    fontSize: 'var(--text-xs)',
+                    fontFamily: 'var(--font-mono)',
+                    fontSize: '9px',
                     color: 'var(--text-muted)',
-                    background: 'var(--bg-surface)',
+                    background: 'var(--bg-raised)',
                     border: '1px solid var(--border-subtle)',
-                    borderRadius: 'var(--radius-sm)',
-                    padding: '2px 6px',
+                    borderRadius: '4px',
+                    padding: '1px 6px',
                   }}
                 >
                   {entity.name ?? String(entity)}
@@ -88,16 +91,16 @@ export function AlertCard({ alert, onAcknowledge, onDismiss, compact = false }: 
 
           {/* Confidence */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <span style={{ fontSize: 'var(--text-xs)', color: 'var(--text-muted)', minWidth: '64px' }}>Confidence</span>
+            <span style={{ fontFamily: 'var(--font-mono)', fontSize: '9px', color: 'var(--text-muted)', minWidth: '64px' }}>Conf</span>
             <div style={{ flex: 1 }}>
-              <ConfidenceBar value={Number(alert.confidence ?? 0.5)} height={3} />
+              <ConfidenceBar value={Number(alert.confidence ?? 0.5)} height={2} />
             </div>
           </div>
 
           {/* Source count */}
           {(sources.length > 0 || signalIds.length > 0) && (
-            <div style={{ fontSize: 'var(--text-xs)', color: 'var(--text-muted)' }}>
-              {sources.length} source{sources.length !== 1 ? 's' : ''} · {signalIds.length} signal{signalIds.length !== 1 ? 's' : ''}
+            <div style={{ fontFamily: 'var(--font-mono)', fontSize: '9px', color: 'var(--text-muted)' }}>
+              {sources.length} src · {signalIds.length} sig
             </div>
           )}
         </>
@@ -105,18 +108,20 @@ export function AlertCard({ alert, onAcknowledge, onDismiss, compact = false }: 
 
       {/* Actions */}
       {(onAcknowledge || onDismiss) && !isAcknowledged && (
-        <div style={{ display: 'flex', gap: '8px', marginTop: '2px' }}>
+        <div style={{ display: 'flex', gap: '6px', marginTop: '2px' }}>
           {onAcknowledge && (
             <button
               onClick={() => onAcknowledge(alert.id)}
               style={{
-                padding: '4px 10px',
-                fontSize: 'var(--text-xs)',
-                background: `${color}22`,
-                border: `1px solid ${color}66`,
-                borderRadius: 'var(--radius-sm)',
+                padding: '3px 10px',
+                fontFamily: 'var(--font-mono)',
+                fontSize: '9px',
+                background: `${color}15`,
+                border: `1px solid ${color}55`,
+                borderRadius: '6px',
                 color,
                 cursor: 'pointer',
+                fontWeight: 600,
               }}
             >
               Acknowledge
@@ -126,11 +131,12 @@ export function AlertCard({ alert, onAcknowledge, onDismiss, compact = false }: 
             <button
               onClick={() => onDismiss(alert.id)}
               style={{
-                padding: '4px 10px',
-                fontSize: 'var(--text-xs)',
-                background: 'none',
+                padding: '3px 10px',
+                fontFamily: 'var(--font-mono)',
+                fontSize: '9px',
+                background: 'transparent',
                 border: '1px solid var(--border-subtle)',
-                borderRadius: 'var(--radius-sm)',
+                borderRadius: '6px',
                 color: 'var(--text-muted)',
                 cursor: 'pointer',
               }}

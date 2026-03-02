@@ -5,15 +5,15 @@ import { useQuery } from '@tanstack/react-query';
 import { getSources } from '../../api/endpoints/sources.js';
 
 const STATUS_COLOR: Record<string, string> = {
-  ok: '#49D17D',
-  error: '#FF5D5D',
-  rate_limited: '#F5B84B',
-  disabled: '#6c7086',
-  pending: '#89b4fa',
+  ok: '#4ade80',
+  error: '#f87171',
+  rate_limited: '#fbbf24',
+  disabled: 'var(--text-muted)',
+  pending: '#38bdf8',
 };
 
 const STATUS_LABEL: Record<string, string> = {
-  ok: 'OK',
+  ok: 'Healthy',
   error: 'Error',
   rate_limited: 'Rate Limited',
   disabled: 'Disabled',
@@ -71,16 +71,7 @@ export default function DataSources() {
     return (
       <button
         onClick={onClick}
-        style={{
-          padding: '3px 10px',
-          fontSize: 'var(--text-xs)',
-          borderRadius: 'var(--radius-sm)',
-          border: `1px solid ${active ? 'var(--color-info)' : 'var(--border-subtle)'}`,
-          background: active ? 'rgba(137,180,250,0.1)' : 'transparent',
-          color: active ? 'var(--color-info)' : 'var(--text-muted)',
-          cursor: 'pointer',
-          textTransform: 'capitalize',
-        }}
+        className={`chip-btn${active ? ' active' : ''}`}
       >
         {children}
       </button>
@@ -90,20 +81,12 @@ export default function DataSources() {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '8px' }}>
-        <h2 style={{ fontSize: 'var(--text-lg)', fontWeight: 700, color: 'var(--text-primary)', margin: 0 }}>
+        <h2 className="section-title" style={{ margin: 0 }}>
           Data Sources
         </h2>
         <button
           onClick={() => refetch()}
-          style={{
-            padding: '5px 14px',
-            fontSize: 'var(--text-xs)',
-            borderRadius: 'var(--radius-sm)',
-            border: '1px solid var(--border-subtle)',
-            background: 'transparent',
-            color: 'var(--text-muted)',
-            cursor: 'pointer',
-          }}
+          className="chip-btn"
         >
           Refresh
         </button>
@@ -114,10 +97,10 @@ export default function DataSources() {
         {['ok', 'error', 'rate_limited', 'disabled', 'pending'].map((status) => (
           <Card key={status}>
             <div style={{ textAlign: 'center', padding: '8px 0' }}>
-              <div style={{ fontSize: '24px', fontWeight: 700, color: STATUS_COLOR[status] ?? 'var(--text-muted)' }}>
+              <div style={{ fontFamily: 'var(--font-mono)', fontSize: '22px', fontWeight: 700, color: STATUS_COLOR[status] ?? 'var(--text-muted)' }}>
                 {statusCounts[status] ?? 0}
               </div>
-              <div style={{ fontSize: 'var(--text-xs)', color: 'var(--text-muted)', marginTop: '4px', textTransform: 'capitalize' }}>
+              <div style={{ fontSize: '11px', color: 'var(--text-muted)', marginTop: '4px' }}>
                 {STATUS_LABEL[status] ?? status}
               </div>
             </div>
@@ -128,7 +111,7 @@ export default function DataSources() {
       {/* Filters */}
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', alignItems: 'center' }}>
         <div style={{ display: 'flex', gap: '4px', flexWrap: 'wrap', alignItems: 'center' }}>
-          <span style={{ fontSize: 'var(--text-xs)', color: 'var(--text-muted)', marginRight: '4px' }}>Category:</span>
+          <span style={{ fontSize: '11px', color: 'var(--text-muted)', marginRight: '4px' }}>Category:</span>
           {categories.map((c) => (
             <FilterButton key={c} active={categoryFilter === c} onClick={() => setCategoryFilter(c)}>
               {c === 'all' ? 'All' : (CATEGORY_LABELS[c] ?? c)}
@@ -136,10 +119,10 @@ export default function DataSources() {
           ))}
         </div>
         <div style={{ display: 'flex', gap: '4px', alignItems: 'center' }}>
-          <span style={{ fontSize: 'var(--text-xs)', color: 'var(--text-muted)', marginRight: '4px' }}>Status:</span>
+          <span style={{ fontSize: '11px', color: 'var(--text-muted)', marginRight: '4px' }}>Status:</span>
           {statuses.map((s) => (
             <FilterButton key={s} active={statusFilter === s} onClick={() => setStatusFilter(s)}>
-              {s === 'rate_limited' ? 'Rate Lim.' : s === 'all' ? 'All' : STATUS_LABEL[s] ?? s}
+              {s === 'all' ? 'All' : (STATUS_LABEL[s] ?? s)}
             </FilterButton>
           ))}
         </div>
@@ -157,11 +140,11 @@ export default function DataSources() {
           </div>
         ) : (
           <div style={{ overflowX: 'auto' }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 'var(--text-sm)' }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse', fontFamily: 'var(--font-mono)', fontSize: '11px' }}>
               <thead>
                 <tr style={{ borderBottom: '1px solid var(--border-subtle)' }}>
                   {['Connector', 'Category', 'Status', 'Last Fetch', 'Signals', 'Error'].map((h) => (
-                    <th key={h} style={{ textAlign: 'left', padding: '8px 12px', fontSize: 'var(--text-xs)', color: 'var(--text-muted)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em', whiteSpace: 'nowrap' }}>
+                    <th key={h} style={{ textAlign: 'left', padding: '8px 12px', fontSize: '11px', color: 'var(--color-info)', fontWeight: 600, whiteSpace: 'nowrap' }}>
                       {h}
                     </th>
                   ))}
@@ -173,34 +156,34 @@ export default function DataSources() {
                     key={source.source_id}
                     style={{ borderBottom: i < filtered.length - 1 ? '1px solid var(--border-subtle)' : 'none' }}
                   >
-                    <td style={{ padding: '8px 12px', color: 'var(--text-primary)', fontWeight: 500, fontFamily: 'monospace', fontSize: 'var(--text-xs)' }}>
+                    <td style={{ padding: '8px 12px', color: 'var(--text-primary)', fontWeight: 500, fontSize: '12px' }}>
                       {source.source_id}
                     </td>
-                    <td style={{ padding: '8px 12px', color: 'var(--text-muted)', fontSize: 'var(--text-xs)', textTransform: 'capitalize' }}>
+                    <td style={{ padding: '8px 12px', color: 'var(--text-muted)', fontSize: '12px' }}>
                       {CATEGORY_LABELS[source.category] ?? (source.category ?? '—')}
                     </td>
                     <td style={{ padding: '8px 12px' }}>
                       <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
                         <span style={{
                           display: 'inline-block',
-                          width: 7,
-                          height: 7,
+                          width: 6,
+                          height: 6,
                           borderRadius: '50%',
-                          background: STATUS_COLOR[source.status] ?? '#6c7086',
+                          background: STATUS_COLOR[source.status] ?? 'var(--text-muted)',
                           flexShrink: 0,
                         }} />
-                        <span style={{ color: STATUS_COLOR[source.status] ?? 'var(--text-muted)', fontSize: 'var(--text-xs)' }}>
+                        <span style={{ color: STATUS_COLOR[source.status] ?? 'var(--text-muted)', fontSize: '12px' }}>
                           {STATUS_LABEL[source.status] ?? source.status}
                         </span>
                       </span>
                     </td>
-                    <td style={{ padding: '8px 12px', color: 'var(--text-muted)', fontSize: 'var(--text-xs)' }}>
+                    <td style={{ padding: '8px 12px', color: 'var(--text-muted)', fontSize: '10px' }}>
                       {timeAgo(source.last_fetch_at)}
                     </td>
-                    <td style={{ padding: '8px 12px', color: 'var(--text-secondary)', fontSize: 'var(--text-xs)', textAlign: 'right' }}>
+                    <td style={{ padding: '8px 12px', color: 'var(--text-secondary)', fontSize: '10px', textAlign: 'right' }}>
                       {(source.total_signals ?? 0).toLocaleString()}
                     </td>
-                    <td style={{ padding: '8px 12px', color: '#FF5D5D', fontSize: 'var(--text-xs)', maxWidth: '200px' }}>
+                    <td style={{ padding: '8px 12px', color: 'var(--color-danger)', fontSize: '10px', maxWidth: '200px' }}>
                       {source.error_msg ? (
                         <span title={source.error_msg} style={{ display: 'block', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                           {source.error_msg}
@@ -215,7 +198,7 @@ export default function DataSources() {
         )}
       </Card>
 
-      <p style={{ fontSize: 'var(--text-xs)', color: 'var(--text-muted)', margin: 0 }}>
+      <p style={{ fontSize: '11px', color: 'var(--text-muted)', margin: 0, lineHeight: 1.6 }}>
         All sources operate in read-only mode. Connectors marked "Disabled" require an API key in .env.
         See DATA_SOURCES.md for full attribution, license, and compliance information.
       </p>

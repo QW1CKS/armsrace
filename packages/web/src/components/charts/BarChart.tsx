@@ -89,7 +89,7 @@ export function BarChart({
           contentStyle={{
             background: chartTheme.tooltipBg,
             border: `1px solid ${chartTheme.grid}`,
-            borderRadius: '6px',
+            borderRadius: '8px',
             fontSize: '12px',
             color: chartTheme.text,
           }}

@@ -9,27 +9,33 @@ interface ConfidenceBarProps {
 
 export function ConfidenceBar({ value, showLabel = true, height = 4 }: ConfidenceBarProps) {
   const pct = Math.round(value * 100);
-  const color = severityColor(100 - pct); // high confidence = success
+  const color = severityColor(100 - pct);
 
   return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
       <div style={{
         flex: 1,
         height,
         background: 'var(--border-subtle)',
-        borderRadius: height / 2,
+        borderRadius: height,
         overflow: 'hidden',
+        position: 'relative',
       }}>
         <div style={{
           width: `${pct}%`,
           height: '100%',
+          borderRadius: height,
           background: color,
-          borderRadius: height / 2,
           transition: 'width 0.3s ease',
         }} />
       </div>
       {showLabel && (
-        <span style={{ fontSize: 'var(--text-xs)', color: 'var(--text-muted)', minWidth: '28px' }}>
+        <span style={{
+          fontFamily: 'var(--font-mono)',
+          fontSize: '10px',
+          color: 'var(--text-muted)',
+          minWidth: '28px',
+        }}>
           {pct}%
         </span>
       )}
