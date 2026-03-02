@@ -39,7 +39,7 @@ export class ConvergenceDetector {
       avg_severity: number;
       signal_count: number;
       signal_ids: string;
-    }>();
+    }>;
 
     for (const row of rows) {
       const signalIds = row.signal_ids.split(',').slice(0, 20);

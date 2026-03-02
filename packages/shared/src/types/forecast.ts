@@ -18,6 +18,4 @@ export const FORECAST_DISCLAIMER =
   'Prophecies are speculative scenario outputs, not factual predictions.' as const;
 
 export const APP_DISCLAIMER =
-  'Armsrace Monitor provides informational analytics and scenario modeling only. ' +
-  'Predictions and prophecies are probabilistic/speculative outputs, not guarantees or advice. ' +
-  'Always verify critical decisions with primary sources.' as const;
+  'Armsrace Monitor provides informational analytics and scenario modeling only. Predictions and prophecies are probabilistic/speculative outputs, not guarantees or advice. Always verify critical decisions with primary sources.';

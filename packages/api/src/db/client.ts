@@ -1,4 +1,4 @@
-import Database from 'better-sqlite3';
+import { DatabaseSync } from 'node:sqlite';
 import { readFileSync } from 'fs';
 import { resolve, dirname } from 'path';
 import { fileURLToPath } from 'url';
@@ -6,7 +6,7 @@ import { logger } from '../logger.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
-let db: Database.Database | null = null;
+let db: DatabaseSync | null = null;
 
 function getDbPath(): string {
   if (process.env.DB_PATH) return process.env.DB_PATH;
@@ -14,7 +14,7 @@ function getDbPath(): string {
   return resolve(__dirname, '../../../../data/armsrace.db');
 }
 
-export function getDb(): Database.Database {
+export function getDb(): DatabaseSync {
   if (!db) throw new Error('Database not initialized. Call initDb() first.');
   return db;
 }
@@ -23,7 +23,7 @@ export async function initDb(): Promise<void> {
   const dbPath = getDbPath();
   logger.info(`Opening database at: ${dbPath}`);
 
-  db = new Database(dbPath);
+  db = new DatabaseSync(dbPath);
 
   // Run migrations
   const migrationsDir = resolve(__dirname, 'migrations');

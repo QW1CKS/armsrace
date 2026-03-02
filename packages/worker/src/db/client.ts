@@ -1,11 +1,11 @@
-import Database from 'better-sqlite3';
+import { DatabaseSync } from 'node:sqlite';
 import { resolve, dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { logger } from '../logger.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
-let db: Database.Database | null = null;
+let db: DatabaseSync | null = null;
 
 function getDbPath(): string {
   if (process.env.DB_PATH) return process.env.DB_PATH;
@@ -13,7 +13,7 @@ function getDbPath(): string {
   return resolve(__dirname, '../../../../data/armsrace.db');
 }
 
-export function getDb(): Database.Database {
+export function getDb(): DatabaseSync {
   if (!db) throw new Error('Database not initialized. Call initDb() first.');
   return db;
 }
@@ -24,12 +24,12 @@ export async function initDb(): Promise<void> {
 
   // Worker opens in WAL mode - the API process will have already created the schema
   // If running worker standalone, the API db/client must be called first (or use docker/init script)
-  db = new Database(dbPath);
+  db = new DatabaseSync(dbPath);
 
   // Ensure WAL mode is active for this connection too
-  db.pragma('journal_mode=WAL');
-  db.pragma('foreign_keys=ON');
-  db.pragma('synchronous=NORMAL');
+  db.exec('PRAGMA journal_mode=WAL');
+  db.exec('PRAGMA foreign_keys=ON');
+  db.exec('PRAGMA synchronous=NORMAL');
 
   logger.info('Worker database connection ready');
 }

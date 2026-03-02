@@ -7,23 +7,15 @@ router.get('/', (_req, res, next) => {
   try {
     const db = getDb();
     const rows = db.prepare(`
-      SELECT DISTINCT ON (name) name, value, components, computed_at
-      FROM indices
-      GROUP BY name
-      HAVING MAX(computed_at)
-      ORDER BY name
-    `).all() as Array<{ name: string; value: number; components: string; computed_at: number }>;
-
-    // Try alternate query if DISTINCT ON fails (SQLite syntax)
-    const indices = rows.length > 0 ? rows : db.prepare(`
       SELECT i.name, i.value, i.components, i.computed_at
       FROM indices i
       INNER JOIN (
         SELECT name, MAX(computed_at) as latest FROM indices GROUP BY name
       ) l ON i.name = l.name AND i.computed_at = l.latest
+      ORDER BY i.name
     `).all() as Array<{ name: string; value: number; components: string; computed_at: number }>;
 
-    const result = indices.map((r) => ({
+    const result = rows.map((r) => ({
       ...r,
       components: JSON.parse(r.components ?? '{}'),
     }));
